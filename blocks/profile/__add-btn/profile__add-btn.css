@@ -1,0 +1,8 @@
+.profile__add-btn  {
+  background: transparent;
+  border: 1px solid #fff;
+  padding: 14px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

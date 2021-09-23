@@ -1,0 +1,8 @@
+.profile__info {
+  display: flex;
+  color: #fff;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  flex-grow: 1;
+}

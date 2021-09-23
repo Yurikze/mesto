@@ -1,0 +1,8 @@
+.places__title {
+  margin: 0;
+  font-size: 24px;
+  line-height: calc(29 / 24);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

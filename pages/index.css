@@ -11,4 +11,12 @@
 @import url("../blocks/profile/__edit/profile__edit.css");
 @import url("../blocks/profile/__subtitle/profile__subtitle.css");
 @import url("../blocks/profile/__add-btn/profile__add-btn.css");
+@import url("../blocks/places/places.css");
+@import url("../blocks/places/__list/places__list.css");
+@import url("../blocks/places/__li/places__li.css");
+@import url("../blocks/places/__meta/places__meta.css");
+@import url("../blocks/places/__title/places__title.css");
+@import url("../blocks/places/__img/places__img.css");
+@import url("../blocks/places/__like-btn/places__like-btn.css");
+@import url("../blocks/places/__like-btn/_active/places__like-btn_active.css");
 

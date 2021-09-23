@@ -1,0 +1,15 @@
+.places__like-btn {
+  background: url('../../../images/like.svg');
+  background-color: transparent;
+  border: 0;
+  width: 22px;
+  height: 19px;
+  padding: 0;
+  transition: opacity .1s;
+  flex-shrink: 0;
+}
+
+.places__like-btn:hover {
+  opacity: 50%;
+  cursor: pointer;
+}

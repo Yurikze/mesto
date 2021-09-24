@@ -19,4 +19,6 @@
 @import url("../blocks/places/__img/places__img.css");
 @import url("../blocks/places/__like-btn/places__like-btn.css");
 @import url("../blocks/places/__like-btn/_active/places__like-btn_active.css");
+@import url("../blocks/footer/footer.css");
+@import url("../blocks/footer/__text/footer__text.css");
 

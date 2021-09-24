@@ -1,0 +1,10 @@
+.popup__submit {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: none;
+  background: #000;
+  color: #fff;
+  border-radius: 2px;
+  font-size: 18px;
+  line-height: calc(22 / 18);
+}

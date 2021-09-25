@@ -9,4 +9,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: opacity .1s;
+}
+
+.profile__edit:hover {
+  opacity: .6;
 }

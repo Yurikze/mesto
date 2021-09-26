@@ -15,4 +15,4 @@
 
 **GitHub Pages**
 
-- [Ссылка на сайт на GitHub Pages](https://yurikze.github.io/)
+- [Ссылка на сайт на GitHub Pages](https://yurikze.github.io/mesto/)

@@ -6,4 +6,18 @@
   margin: 0;
   list-style: none;
   gap: 17px 20px;
+  justify-content: center;
+}
+
+@media (max-width: 990px) {
+  .places__list {
+    grid-template-columns: repeat(2, 282px);
+    padding: 0 19px;
+  }
+}
+
+@media (max-width: 625px) {
+  .places__list {
+    grid-template-columns: 282px;
+  }
 }

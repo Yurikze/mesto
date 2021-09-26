@@ -6,3 +6,10 @@
   align-items: center;
   flex-grow: 1;
 }
+
+@media (max-width: 767px) {
+  .profile__info {
+    margin: 0 0 34px;
+    justify-content: center;
+  }
+}

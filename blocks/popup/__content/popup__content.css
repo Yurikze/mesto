@@ -4,7 +4,12 @@
   border-radius: 10px;
   max-width: 430px;
   width: 100%;
-  min-height: 330px;
   position: relative;
   box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+  .popup__content {
+    padding: 25px 22px;
+  }
 }

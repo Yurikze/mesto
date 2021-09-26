@@ -12,3 +12,10 @@
 .profile__add-btn:hover {
   opacity: .6;
 }
+
+@media (max-width: 425px) {
+  .profile__add-btn {
+    width: 100%;
+    padding: 16px 64px;
+  }
+}

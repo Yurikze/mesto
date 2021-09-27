@@ -1,3 +1,6 @@
 .places__img {
   display: block;
+  object-fit: cover;
+  width: 282px;
+  height: 282px;
 }

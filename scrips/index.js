@@ -1,9 +1,10 @@
 const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
 const editBtn = document.querySelector('.profile__edit');
+const addBtn = document.querySelector('.profile__add-btn');
 const popup = document.querySelector('.popup');
 const closeBtn = popup.querySelector('.popup__close-btn');
-const nameInput = popup.querySelector('[name=name].popup__input-text');
+const nameInput = popup.querySelector('[name=title].popup__input-text');
 const subtitleInput = popup.querySelector('[name=subtitle].popup__input-text');
 const form = popup.querySelector('.popup__form');
 const placesList = document.querySelector('.places__list');
@@ -42,14 +43,13 @@ const renderPlaceItem = (item) => {
   placeElem.querySelector('.places__img').alt = item.name;
   placeElem.querySelector('.places__title').textContent = item.name;
 
-  placesList.append(placeElem);
+  placesList.prepend(placeElem);
 };
 
 initialCards.forEach(renderPlaceItem);
 
 const openPopupHandler = () => {
   popup.classList.add('popup_is-visible');
-  editFormDataHandler(title);
 };
 
 const closePopupHandler = () => {
@@ -63,8 +63,36 @@ const closePopupHandler = () => {
 // };
 
 const editFormDataHandler = () => {
+  openPopupHandler();
+  popup.querySelector('.popup__title').textContent = 'Редактировать профиль';
   nameInput.value = title.textContent;
   subtitleInput.value = subtitle.textContent;
+};
+
+const addPlaceHandler = (e) => {
+  openPopupHandler();
+  const newPlace = {};
+  popup.querySelector('.popup__title').textContent = 'Новое место';
+  nameInput.placeholder = 'Название';
+  nameInput.value = '';
+  subtitleInput.placeholder = 'Ссылка на картинку';
+  subtitleInput.value = '';
+
+  const formAddPlaceHandler = (evt) => {
+    evt.preventDefault();
+
+    newPlace.name = nameInput.value;
+    newPlace.link = subtitleInput.value;
+    renderPlaceItem(newPlace);
+
+    form.removeEventListener('submit', formAddPlaceHandler);
+    form.addEventListener('submit', formSubmitHandler);
+
+    closePopupHandler();
+  };
+
+  form.removeEventListener('submit', formSubmitHandler);
+  form.addEventListener('submit', formAddPlaceHandler);
 };
 
 const formSubmitHandler = (e) => {
@@ -74,6 +102,7 @@ const formSubmitHandler = (e) => {
   closePopupHandler();
 };
 
-editBtn.addEventListener('click', openPopupHandler);
+editBtn.addEventListener('click', editFormDataHandler);
 closeBtn.addEventListener('click', closePopupHandler);
+addBtn.addEventListener('click', addPlaceHandler);
 form.addEventListener('submit', formSubmitHandler);

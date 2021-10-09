@@ -42,6 +42,9 @@ const renderPlaceItem = (item) => {
   placeElem.querySelector('.places__img').src = item.link;
   placeElem.querySelector('.places__img').alt = item.name;
   placeElem.querySelector('.places__title').textContent = item.name;
+  placeElem.querySelector('.places__like-btn').addEventListener('click', (e) => {
+    e.target.classList.toggle('places__like-btn_active');
+  })
 
   placesList.prepend(placeElem);
 };

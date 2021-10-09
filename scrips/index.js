@@ -45,6 +45,9 @@ const renderPlaceItem = (item) => {
   placeElem.querySelector('.places__like-btn').addEventListener('click', (e) => {
     e.target.classList.toggle('places__like-btn_active');
   })
+  placeElem.querySelector('.places__delete-icon').addEventListener('click', (e) => {
+    e.target.parentNode.remove();
+  })
 
   placesList.prepend(placeElem);
 };

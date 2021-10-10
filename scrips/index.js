@@ -9,6 +9,10 @@ const subtitleInput = popup.querySelector('[name=subtitle].popup__input-text');
 const form = popup.querySelector('.popup__form');
 const placesList = document.querySelector('.places__list');
 const placeTemplate = document.querySelector('#place__li').content;
+const popupImgDiv = document.querySelector('.popup-image');
+const popupImg = popupImgDiv.querySelector('.popup-image__img');
+const popupImgText = popupImgDiv.querySelector('.popup-image__subtitle');
+const popupImgClose = popupImgDiv.querySelector('.popup-image__close-btn');
 
 const initialCards = [
   {
@@ -37,18 +41,35 @@ const initialCards = [
   },
 ];
 
+const showImageHandler = () => {};
+
+const toggleShowImageHandler = () => {
+  popupImgDiv.classList.toggle('popup-image_is-visible');
+};
+
 const renderPlaceItem = (item) => {
   const placeElem = placeTemplate.querySelector('.places__li').cloneNode(true);
   placeElem.querySelector('.places__img').src = item.link;
   placeElem.querySelector('.places__img').alt = item.name;
   placeElem.querySelector('.places__title').textContent = item.name;
-  placeElem.querySelector('.places__like-btn').addEventListener('click', (e) => {
-    e.target.classList.toggle('places__like-btn_active');
-  })
-  placeElem.querySelector('.places__delete-icon').addEventListener('click', (e) => {
-    e.target.parentNode.remove();
-  })
-
+  placeElem
+    .querySelector('.places__like-btn')
+    .addEventListener('click', (e) => {
+      e.target.classList.toggle('places__like-btn_active');
+    });
+  placeElem
+    .querySelector('.places__delete-icon')
+    .addEventListener('click', (e) => {
+      e.target.parentNode.remove();
+    });
+  placeElem.querySelector('.places__img').addEventListener('click', (e) => {
+    if (e.currentTarget === e.target) {
+      toggleShowImageHandler();
+      popupImg.src = item.link;
+      popupImg.alt = item.name;
+      popupImgText.textContent = item.name;
+    }
+  });
   placesList.prepend(placeElem);
 };
 
@@ -90,7 +111,7 @@ const addPlaceHandler = (e) => {
     newPlace.name = nameInput.value;
     newPlace.link = subtitleInput.value;
     renderPlaceItem(newPlace);
-
+    initialCards.push(newPlace);
     form.removeEventListener('submit', formAddPlaceHandler);
     form.addEventListener('submit', formSubmitHandler);
 
@@ -112,3 +133,4 @@ editBtn.addEventListener('click', editFormDataHandler);
 closeBtn.addEventListener('click', closePopupHandler);
 addBtn.addEventListener('click', addPlaceHandler);
 form.addEventListener('submit', formSubmitHandler);
+popupImgClose.addEventListener('click', toggleShowImageHandler);

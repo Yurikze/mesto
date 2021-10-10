@@ -41,8 +41,6 @@ const initialCards = [
   },
 ];
 
-const showImageHandler = () => {};
-
 const toggleShowImageHandler = () => {
   popupImgDiv.classList.toggle('popup-image_is-visible');
 };

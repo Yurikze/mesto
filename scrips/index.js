@@ -2,17 +2,24 @@ const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
 const editBtn = document.querySelector('.profile__edit');
 const addBtn = document.querySelector('.profile__add-btn');
-const popup = document.querySelector('.popup');
-const closeBtn = popup.querySelector('.popup__close-btn');
-const nameInput = popup.querySelector('[name=title].popup__input-text');
-const subtitleInput = popup.querySelector('[name=subtitle].popup__input-text');
-const form = popup.querySelector('.popup__form');
 const placesList = document.querySelector('.places__list');
+const popupEdit = document.querySelector('.popup-edit');
+const nameInput = popupEdit.querySelector('[name=title].popup__input-text');
+const subtitleInput = popupEdit.querySelector(
+  '[name=subtitle].popup__input-text'
+);
+const popupAdd = document.querySelector('.popup-add');
+const placeTitleInput = popupAdd.querySelector(
+  '[name=title].popup__input-text'
+);
+const placeImgSrcInput = popupAdd.querySelector(
+  '[name=subtitle].popup__input-text'
+);
+
 const placeTemplate = document.querySelector('#place__li').content;
-const popupImgDiv = document.querySelector('.popup-image');
-const popupImg = popupImgDiv.querySelector('.popup-image__img');
-const popupImgText = popupImgDiv.querySelector('.popup-image__subtitle');
-const popupImgClose = popupImgDiv.querySelector('.popup-image__close-btn');
+const popupImg = document.querySelector('.popup-image');
+const popupImgSrc = popupImg.querySelector('.popup-image__img');
+const popupImgText = popupImg.querySelector('.popup-image__subtitle');
 
 const initialCards = [
   {
@@ -41,14 +48,11 @@ const initialCards = [
   },
 ];
 
-const toggleShowImageHandler = () => {
-  popupImgDiv.classList.toggle('popup-image_is-visible');
-};
-
-const renderPlaceItem = (item) => {
+const createCard = (item) => {
   const placeElem = placeTemplate.querySelector('.places__li').cloneNode(true);
-  placeElem.querySelector('.places__img').src = item.link;
-  placeElem.querySelector('.places__img').alt = item.name;
+  const placeImg = placeElem.querySelector('.places__img');
+  placeImg.src = item.link;
+  placeImg.alt = item.name;
   placeElem.querySelector('.places__title').textContent = item.name;
   placeElem
     .querySelector('.places__like-btn')
@@ -60,75 +64,67 @@ const renderPlaceItem = (item) => {
     .addEventListener('click', (e) => {
       e.target.parentNode.remove();
     });
-  placeElem.querySelector('.places__img').addEventListener('click', (e) => {
+  placeImg.addEventListener('click', (e) => {
     if (e.currentTarget === e.target) {
-      toggleShowImageHandler();
-      popupImg.src = item.link;
-      popupImg.alt = item.name;
+      openPopupHandler(popupImg);
+      popupImgSrc.src = item.link;
+      popupImgSrc.alt = item.name;
       popupImgText.textContent = item.name;
+      popupImg
+        .querySelector('.popup__close-btn')
+        .addEventListener('click', () => closePopupHandler(popupImg));
     }
   });
+  return placeElem;
+};
+
+const renderPlaceItem = (item) => {
+  const placeElem = createCard(item);
   placesList.prepend(placeElem);
 };
 
 initialCards.forEach(renderPlaceItem);
 
-const openPopupHandler = () => {
+const openPopupHandler = (popup) => {
   popup.classList.add('popup_is-visible');
 };
 
-const closePopupHandler = () => {
+const closePopupHandler = (popup) => {
   popup.classList.remove('popup_is-visible');
 };
 
-// const closeOverlayHandler = (e) => {
-//   if (e.target === e.currentTarget) {
-//     popup.classList.remove('popup_is-visible');
-//   }
-// };
-
 const editFormDataHandler = () => {
-  openPopupHandler();
-  popup.querySelector('.popup__title').textContent = 'Редактировать профиль';
+  openPopupHandler(popupEdit);
+  popupEdit.addEventListener('submit', (e) => {
+    e.preventDefault();
+    title.textContent = nameInput.value;
+    subtitle.textContent = subtitleInput.value;
+    closePopupHandler(popupEdit);
+  });
   nameInput.value = title.textContent;
   subtitleInput.value = subtitle.textContent;
+  popupEdit
+    .querySelector('.popup__close-btn')
+    .addEventListener('click', () => closePopupHandler(popupEdit));
 };
 
-const addPlaceHandler = (e) => {
-  openPopupHandler();
-  const newPlace = {};
-  popup.querySelector('.popup__title').textContent = 'Новое место';
-  nameInput.placeholder = 'Название';
-  nameInput.value = '';
-  subtitleInput.placeholder = 'Ссылка на картинку';
-  subtitleInput.value = '';
-
-  const formAddPlaceHandler = (evt) => {
-    evt.preventDefault();
-
-    newPlace.name = nameInput.value;
-    newPlace.link = subtitleInput.value;
-    renderPlaceItem(newPlace);
-    initialCards.push(newPlace);
-    form.removeEventListener('submit', formAddPlaceHandler);
-    form.addEventListener('submit', formSubmitHandler);
-
-    closePopupHandler();
-  };
-
-  form.removeEventListener('submit', formSubmitHandler);
-  form.addEventListener('submit', formAddPlaceHandler);
-};
-
-const formSubmitHandler = (e) => {
-  e.preventDefault();
-  title.textContent = nameInput.value;
-  subtitle.textContent = subtitleInput.value;
-  closePopupHandler();
+const addPlaceHandler = () => {
+  openPopupHandler(popupAdd);
+  popupAdd.querySelector('.popup__form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const placeItem = {
+      name: placeTitleInput.value,
+      link: placeImgSrcInput.value,
+    };
+    renderPlaceItem(placeItem);
+    placeTitleInput.value = '';
+    placeImgSrcInput.value = '';
+    closePopupHandler(popupAdd);
+  });
+  popupAdd
+    .querySelector('.popup__close-btn')
+    .addEventListener('click', () => closePopupHandler(popupAdd));
 };
 
 editBtn.addEventListener('click', editFormDataHandler);
-closeBtn.addEventListener('click', closePopupHandler);
 addBtn.addEventListener('click', addPlaceHandler);
-form.addEventListener('submit', formSubmitHandler);
-popupImgClose.addEventListener('click', toggleShowImageHandler);

@@ -5,17 +5,17 @@ const addBtn = document.querySelector('.profile__add-btn');
 const placesList = document.querySelector('.places__list');
 const popupEdit = document.querySelector('.popup-edit');
 const editForm = popupEdit.querySelector('.popup__form');
-const nameInput = popupEdit.querySelector('[name=title].popup__input-text');
+const nameInput = popupEdit.querySelector('[name=title].popup__input');
 const subtitleInput = popupEdit.querySelector(
-  '[name=subtitle].popup__input-text'
+  '[name=subtitle].popup__input'
 );
 const popupAdd = document.querySelector('.popup-add');
 const addForm = popupAdd.querySelector('.popup__form');
 const placeTitleInput = popupAdd.querySelector(
-  '[name=title].popup__input-text'
+  '[name=title].popup__input'
 );
 const placeImgSrcInput = popupAdd.querySelector(
-  '[name=subtitle].popup__input-text'
+  '[name=subtitle].popup__input'
 );
 
 const placeTemplate = document.querySelector('#place__li').content;

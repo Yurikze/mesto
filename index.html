@@ -87,17 +87,23 @@
               class="popup__input"
               required
               placeholder="Название"
+              minlength="2"
+              maxlength="30"
+              id="place-name-input"
             />
-            <span class="popup__input-error"></span>
+            <span class="popup__input-error place-name-input-error"></span>
+
 
             <input
-              type="text"
+              type="url"
               name="subtitle"
               class="popup__input"
               required
               placeholder="Ссылка на картинку"
+              id="url-input"
             />
-            <span class="popup__input-error"></span>
+            <span class="popup__input-error url-input-error"></span>
+
 
             <button type="submit" class="popup__submit">Сохранить</button>
           </form>

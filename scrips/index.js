@@ -6,24 +6,17 @@ const placesList = document.querySelector('.places__list');
 const popupEdit = document.querySelector('.popup-edit');
 const editForm = popupEdit.querySelector('.popup__form');
 const nameInput = popupEdit.querySelector('[name=title].popup__input');
-const subtitleInput = popupEdit.querySelector(
-  '[name=subtitle].popup__input'
-);
+const subtitleInput = popupEdit.querySelector('[name=subtitle].popup__input');
 const popupAdd = document.querySelector('.popup-add');
 const addForm = popupAdd.querySelector('.popup__form');
-const placeTitleInput = popupAdd.querySelector(
-  '[name=title].popup__input'
-);
-const placeImgSrcInput = popupAdd.querySelector(
-  '[name=subtitle].popup__input'
-);
+const placeTitleInput = popupAdd.querySelector('[name=title].popup__input');
+const placeImgSrcInput = popupAdd.querySelector('[name=subtitle].popup__input');
 
 const placeTemplate = document.querySelector('#place__li').content;
 const popupImg = document.querySelector('.popup-image');
 const popupImgSrc = popupImg.querySelector('.popup-image__img');
 const popupImgText = popupImg.querySelector('.popup-image__subtitle');
-
-const closeBtns = document.querySelectorAll('.popup__close-btn');
+const popups = document.querySelectorAll('.popup');
 
 const initialCards = [
   {
@@ -123,13 +116,20 @@ const addPlaceHandler = (e) => {
 
 editBtn.addEventListener('click', editFormDataHandler);
 addBtn.addEventListener('click', () => openPopupHandler(popupAdd));
-// closeBtns.forEach(item => item.addEventListener('click', (e) => closePopupHandler(e.target.closest('.popup'))))
 document.addEventListener('click', (e) => {
   return (
-    e.target.dataset.delete !== undefined &&
-    closePopupHandler(e.target.closest('.popup'))
+    (e.target.dataset.delete !== undefined &&
+      closePopupHandler(e.target.closest('.popup'))) ||
+    (e.target.classList.contains('popup') && closePopupHandler(e.target))
   );
 });
-
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    popups.forEach((popup) => {
+      popup.classList.remove('popup_is-visible') &&
+        popup.classList.contains('popup_is-visible');
+    });
+  }
+});
 addForm.addEventListener('submit', (e) => addPlaceHandler(e));
 editForm.addEventListener('submit', (e) => editFormSubmitHandler(e));

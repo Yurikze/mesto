@@ -1,19 +1,37 @@
 const enableValidation = (props) => {
   const forms = [...document.querySelectorAll(props.formSelector)];
-  const a = 1;
   forms.forEach((form) => {
     addListenerToForm((form = form), props);
     form.addEventListener('submit', (evt) => {
-      const { target } = evt;
-      const data = [...target.querySelectorAll(props.inputSelector)].reduce(
-        (sum, input) => ({
-          ...sum,
-          [input.name]: input.value,
-        }),
-        {}
-      );
+      handleSubmit((evt = evt), props);
+    });
+    form.addEventListener('input', (evt) => {
+      handleFormInput(evt = evt, props);
     });
   });
+};
+
+const handleFormInput = (evt, props) => {
+  const { currentTarget: form } = evt;
+
+  setSubmitBtnState(form, props);
+};
+
+const setSubmitBtnState = (form, props) => {
+  const btn = form.querySelector(props.submitButtonSelector);
+  btn.disabled = !form.checkValidity();
+  btn.classList.toggle(props.inactiveButtonClass, !form.checkValidity());
+};
+
+const handleSubmit = (evt, props) => {
+  const { target } = evt;
+  const data = [...target.querySelectorAll(props.inputSelector)].reduce(
+    (sum, input) => ({
+      ...sum,
+      [input.name]: input.value,
+    }),
+    {}
+  );
 };
 
 const addListenerToForm = (form, props) => {
@@ -42,4 +60,6 @@ enableValidation({
   inputSelector: '.popup__input',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__input-error_active',
+  submitButtonSelector: '.popup__submit',
+  inactiveButtonClass: 'popup__submit_disabled',
 });

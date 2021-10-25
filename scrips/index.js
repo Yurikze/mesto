@@ -81,7 +81,18 @@ initialCards.forEach(renderPlaceItem);
 
 const openPopupHandler = (popup) => {
   popup.classList.add('popup_is-visible');
+  document.addEventListener('keydown', onEscPopupHandler);
 };
+
+const onEscPopupHandler = e => {
+  if (e.key === 'Escape') {
+    popups.forEach((popup) => {
+      popup.classList.remove('popup_is-visible') &&
+        popup.classList.contains('popup_is-visible');
+    });
+  }
+  document.removeEventListener('keydown', onEscPopupHandler);
+}
 
 const closePopupHandler = (popup) => {
   popup.classList.remove('popup_is-visible');
@@ -123,13 +134,6 @@ document.addEventListener('click', (e) => {
     (e.target.classList.contains('popup') && closePopupHandler(e.target))
   );
 });
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    popups.forEach((popup) => {
-      popup.classList.remove('popup_is-visible') &&
-        popup.classList.contains('popup_is-visible');
-    });
-  }
-});
+
 addForm.addEventListener('submit', (e) => addPlaceHandler(e));
 editForm.addEventListener('submit', (e) => editFormSubmitHandler(e));

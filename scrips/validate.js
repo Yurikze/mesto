@@ -2,9 +2,6 @@ const enableValidation = (props) => {
   const forms = [...document.querySelectorAll(props.formSelector)];
   forms.forEach((form) => {
     addListenerToForm((form = form), props);
-    form.addEventListener('submit', (evt) => {
-      handleSubmit((evt = evt), props);
-    });
     form.addEventListener('input', (evt) => {
       handleFormInput(evt = evt, props);
     });

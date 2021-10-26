@@ -18,33 +18,6 @@ const popupImgSrc = popupImg.querySelector('.popup-image__img');
 const popupImgText = popupImg.querySelector('.popup-image__subtitle');
 const popups = document.querySelectorAll('.popup');
 
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
-  },
-];
-
 const createCard = (item) => {
   const placeElem = placeTemplate.querySelector('.places__li').cloneNode(true);
   const placeImg = placeElem.querySelector('.places__img');
@@ -59,7 +32,7 @@ const createCard = (item) => {
   placeElem
     .querySelector('.places__delete-icon')
     .addEventListener('click', (e) => {
-      e.target.parentNode.remove();
+      e.target.closest('.places__li').remove();
     });
   placeImg.addEventListener('click', (e) => {
     if (e.currentTarget === e.target) {
@@ -82,20 +55,26 @@ initialCards.forEach(renderPlaceItem);
 const openPopupHandler = (popup) => {
   popup.classList.add('popup_is-visible');
   document.addEventListener('keydown', onEscPopupHandler);
+  document.addEventListener('click', onClosePopup);
 };
 
-const onEscPopupHandler = e => {
-  if (e.key === 'Escape') {
-    popups.forEach((popup) => {
-      popup.classList.remove('popup_is-visible') &&
-        popup.classList.contains('popup_is-visible');
-    });
-  }
-  document.removeEventListener('keydown', onEscPopupHandler);
-}
+const onEscPopupHandler = (e) => {
+  const openedPopup = document.querySelector('.popup_is-visible');
+  e.key === 'Escape' && openedPopup.classList.remove('popup_is-visible');
+};
+
+const onClosePopup = (e) => {
+  return (
+    (e.target.dataset.delete !== undefined &&
+      closePopupHandler(e.target.closest('.popup'))) ||
+    (e.target.classList.contains('popup') && closePopupHandler(e.target))
+  );
+};
 
 const closePopupHandler = (popup) => {
   popup.classList.remove('popup_is-visible');
+  document.removeEventListener('keydown', onEscPopupHandler);
+  document.removeEventListener('click', onClosePopup);
 };
 
 const editFormDataHandler = () => {
@@ -109,8 +88,6 @@ const editFormSubmitHandler = (e) => {
   title.textContent = nameInput.value;
   subtitle.textContent = subtitleInput.value;
   closePopupHandler(popupEdit);
-  nameInput.value = title.textContent;
-  subtitleInput.value = subtitle.textContent;
 };
 
 const addPlaceHandler = (e) => {
@@ -123,17 +100,10 @@ const addPlaceHandler = (e) => {
   placeTitleInput.value = '';
   placeImgSrcInput.value = '';
   closePopupHandler(popupAdd);
+  addForm.querySelector('.popup__submit').disabled = true;
 };
 
 editBtn.addEventListener('click', editFormDataHandler);
 addBtn.addEventListener('click', () => openPopupHandler(popupAdd));
-document.addEventListener('click', (e) => {
-  return (
-    (e.target.dataset.delete !== undefined &&
-      closePopupHandler(e.target.closest('.popup'))) ||
-    (e.target.classList.contains('popup') && closePopupHandler(e.target))
-  );
-});
-
 addForm.addEventListener('submit', (e) => addPlaceHandler(e));
 editForm.addEventListener('submit', (e) => editFormSubmitHandler(e));

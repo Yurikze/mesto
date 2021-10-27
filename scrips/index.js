@@ -59,16 +59,16 @@ const openPopupHandler = (popup) => {
 };
 
 const onEscPopupHandler = (e) => {
-  const openedPopup = document.querySelector('.popup_is-visible');
-  e.key === 'Escape' && openedPopup.classList.remove('popup_is-visible');
+  onClosePopup(e);
 };
 
 const onClosePopup = (e) => {
-  return (
-    (e.target.dataset.delete !== undefined &&
-      closePopupHandler(e.target.closest('.popup'))) ||
-    (e.target.classList.contains('popup') && closePopupHandler(e.target))
-  );
+  const openedPopup = document.querySelector('.popup_is-visible');
+
+  (e.target.dataset.delete !== undefined &&
+    closePopupHandler(e.target.closest('.popup'))) ||
+    (e.target.classList.contains('popup') && closePopupHandler(e.target)) ||
+    (e.key === 'Escape' && closePopupHandler(openedPopup));
 };
 
 const closePopupHandler = (popup) => {

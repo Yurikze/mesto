@@ -1,5 +1,6 @@
-import { initialCards } from './dummy_data.js';
+import { initialCards } from './utils.js';
 import { Card } from './Card.js';
+import { FormValidator } from './FormValidator.js'
 
 const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
@@ -14,6 +15,20 @@ const popupAdd = document.querySelector('.popup-add');
 const addForm = popupAdd.querySelector('.popup__form');
 const placeTitleInput = popupAdd.querySelector('[name=title].popup__input');
 const placeImgSrcInput = popupAdd.querySelector('[name=subtitle].popup__input');
+const forms = [...document.querySelectorAll('.popup__form')];
+
+forms.forEach(form => {
+  const validateForm = new FormValidator({
+    // formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_active',
+    submitButtonSelector: '.popup__submit',
+    inactiveButtonClass: 'popup__submit_disabled',
+  }, form)
+  validateForm.enableValidation()
+})
+
 
 const openPopupHandler = (popup) => {
   popup.classList.add('popup_is-visible');

@@ -1,6 +1,6 @@
 import { initialCards } from './utils.js';
 import { Card } from './Card.js';
-import { FormValidator } from './FormValidator.js'
+import { FormValidator } from './FormValidator.js';
 
 const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
@@ -17,18 +17,19 @@ const placeTitleInput = popupAdd.querySelector('[name=title].popup__input');
 const placeImgSrcInput = popupAdd.querySelector('[name=subtitle].popup__input');
 const forms = [...document.querySelectorAll('.popup__form')];
 
-forms.forEach(form => {
-  const validateForm = new FormValidator({
-    // formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__input-error_active',
-    submitButtonSelector: '.popup__submit',
-    inactiveButtonClass: 'popup__submit_disabled',
-  }, form)
-  validateForm.enableValidation()
-})
-
+forms.forEach((form) => {
+  const validateForm = new FormValidator(
+    {
+      inputSelector: '.popup__input',
+      inputErrorClass: 'popup__input_type_error',
+      errorClass: 'popup__input-error_active',
+      submitButtonSelector: '.popup__submit',
+      inactiveButtonClass: 'popup__submit_disabled',
+    },
+    form
+  );
+  validateForm.enableValidation();
+});
 
 const openPopupHandler = (popup) => {
   popup.classList.add('popup_is-visible');
@@ -37,7 +38,7 @@ const openPopupHandler = (popup) => {
 };
 
 const renderPlaceItem = (item) => {
-  const data = {...item, openPopupHandler}
+  const data = { ...item, openPopupHandler };
   const place = new Card(data, '#place__li');
   const placeElem = place.generateCard();
   placesList.prepend(placeElem);
@@ -46,16 +47,17 @@ const renderPlaceItem = (item) => {
 initialCards.forEach(renderPlaceItem);
 
 const onEscPopupHandler = (e) => {
-  onClosePopup(e);
+  const openedPopup = document.querySelector('.popup_is-visible');
+  e.key === 'Escape' && closePopupHandler(openedPopup);
 };
 
 const onClosePopup = (e) => {
-  const openedPopup = document.querySelector('.popup_is-visible');
-
-  (e.target.dataset.delete !== undefined &&
-    closePopupHandler(e.target.closest('.popup'))) ||
-    (e.target.classList.contains('popup') && closePopupHandler(e.target)) ||
-    (e.key === 'Escape' && closePopupHandler(openedPopup));
+  if (
+    e.target.classList.contains('popup') ||
+    e.target.classList.contains('popup__close-btn')
+  ) {
+    closePopupHandler(e.target.closest('.popup'));
+  }
 };
 
 const closePopupHandler = (popup) => {
@@ -84,8 +86,7 @@ const addPlaceHandler = (e) => {
     link: placeImgSrcInput.value,
   };
   renderPlaceItem(placeItem);
-  placeTitleInput.value = '';
-  placeImgSrcInput.value = '';
+  e.target.reset();
   closePopupHandler(popupAdd);
   addForm.querySelector('.popup__submit').disabled = true;
 };

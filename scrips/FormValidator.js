@@ -9,7 +9,6 @@ export class FormValidator {
   }
 
   _handleFieldValidation(evt) {
-    console.log(evt);
     const { target } = evt;
     const errorEl = document.querySelector(`.${target.id}-error`);
     errorEl.textContent = target.validationMessage;

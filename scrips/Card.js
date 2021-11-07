@@ -27,27 +27,31 @@ export class Card {
   }
 
   _showBigImageHandler(e) {
-    if (e.currentTarget === e.target) {
-      this._openPopupHandler(popupImg);
-      popupImgSrc.src = this._link;
-      popupImgSrc.alt = this._cardTitle;
-      popupImgText.textContent = this._cardTitle;
-    }
+    this._openPopupHandler(popupImg);
+    popupImgSrc.src = this._link;
+    popupImgSrc.alt = this._cardTitle;
+    popupImgText.textContent = this._cardTitle;
+  }
+
+  _addEvtListenersToCard(card) {
+    card
+      .querySelector('.places__like-btn')
+      .addEventListener('click', this._toggleLikeHandler);
+    card
+      .querySelector('.places__delete-icon')
+      .addEventListener('click', this._removeCardHandler);
+    card
+      .querySelector('.places__img')
+      .addEventListener('click', (e) => this._showBigImageHandler(e));
   }
 
   generateCard() {
     this._element = this._getTemplate();
-    this._element.querySelector('.places__img').src = this._link;
+    const placeImg = this._element.querySelector('.places__img');
+    placeImg.src = this._link;
+    placeImg.alt = this._cardTitle;
     this._element.querySelector('.places__title').textContent = this._cardTitle;
-    this._element
-      .querySelector('.places__like-btn')
-      .addEventListener('click', this._toggleLikeHandler);
-    this._element
-      .querySelector('.places__delete-icon')
-      .addEventListener('click', this._removeCardHandler);
-    this._element
-      .querySelector('.places__img')
-      .addEventListener('click', (e) => this._showBigImageHandler(e));
+    this._addEvtListenersToCard(this._element);
 
     return this._element;
   }

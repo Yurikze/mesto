@@ -33,14 +33,14 @@ export class Card {
     popupImgText.textContent = this._cardTitle;
   }
 
-  _addEvtListenersToCard(card) {
-    card
+  _addEvtListenersToCard() {
+    this._element
       .querySelector('.places__like-btn')
       .addEventListener('click', this._toggleLikeHandler);
-    card
+    this._element
       .querySelector('.places__delete-icon')
       .addEventListener('click', this._removeCardHandler);
-    card
+    this._element
       .querySelector('.places__img')
       .addEventListener('click', (e) => this._showBigImageHandler(e));
   }
@@ -51,7 +51,7 @@ export class Card {
     placeImg.src = this._link;
     placeImg.alt = this._cardTitle;
     this._element.querySelector('.places__title').textContent = this._cardTitle;
-    this._addEvtListenersToCard(this._element);
+    this._addEvtListenersToCard();
 
     return this._element;
   }

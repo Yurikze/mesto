@@ -81,6 +81,7 @@ const editFormSubmitHandler = (e) => {
 
 const addPlaceHandler = (e) => {
   e.preventDefault();
+  const submitBtn = addForm.querySelector('.popup__submit');
   const placeItem = {
     name: placeTitleInput.value,
     link: placeImgSrcInput.value,
@@ -88,7 +89,8 @@ const addPlaceHandler = (e) => {
   renderPlaceItem(placeItem);
   e.target.reset();
   closePopupHandler(popupAdd);
-  addForm.querySelector('.popup__submit').disabled = true;
+  submitBtn.disabled = true;
+  submitBtn.classList.add('popup__submit_disabled');
 };
 
 editBtn.addEventListener('click', editFormDataHandler);

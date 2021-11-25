@@ -1,6 +1,7 @@
 import { initialCards } from './utils.js';
 import { Card } from './Card.js';
 import { FormValidator } from './FormValidator.js';
+import Section from './components/Section.js';
 
 const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
@@ -16,6 +17,8 @@ const addForm = popupAdd.querySelector('.popup__form');
 const placeTitleInput = popupAdd.querySelector('[name=title].popup__input');
 const placeImgSrcInput = popupAdd.querySelector('[name=subtitle].popup__input');
 const forms = [...document.querySelectorAll('.popup__form')];
+
+
 
 forms.forEach((form) => {
   const validateForm = new FormValidator(
@@ -37,14 +40,25 @@ const openPopupHandler = (popup) => {
   document.addEventListener('click', onClosePopup);
 };
 
-const renderPlaceItem = (item) => {
-  const data = { ...item, openPopupHandler };
-  const place = new Card(data, '#place__li');
-  const placeElem = place.generateCard();
-  placesList.prepend(placeElem);
-};
+// const renderPlaceItem = (item) => {
+//   const data = { ...item, openPopupHandler };
+//   const place = new Card(data, '#place__li');
+//   const placeElem = place.generateCard();
+//   placesList.prepend(placeElem);
+// };
 
-initialCards.forEach(renderPlaceItem);
+// initialCards.forEach(renderPlaceItem);
+
+const placesSection = new Section({
+  items: initialCards,
+  renderer: (placeItem) => {
+    const place = new Card(placeItem, '#place__li');
+    const placeElem = place.generateCard();
+    placesSection.addItem(placeElem)
+  }
+}, '.places__list')
+
+placesSection.renderItems()
 
 const onEscPopupHandler = (e) => {
   const openedPopup = document.querySelector('.popup_is-visible');

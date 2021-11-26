@@ -1,8 +1,8 @@
 import { popupImg, popupImgSrc, popupImgText } from './utils.js';
 
 export class Card {
-  constructor(data, tmpSelector) {
-    this._openPopupHandler = data.openPopupHandler;
+  constructor(data, tmpSelector, handleCardClick) {
+    this._handleCardClick = handleCardClick;
 
     this._cardTitle = data.name;
     this._link = data.link;
@@ -26,12 +26,12 @@ export class Card {
     this.closest('.places__li').remove();
   }
 
-  _showBigImageHandler(e) {
-    this._openPopupHandler(popupImg);
-    popupImgSrc.src = this._link;
-    popupImgSrc.alt = this._cardTitle;
-    popupImgText.textContent = this._cardTitle;
-  }
+  // _showBigImageHandler(e) {
+  //   this._handleCardClick(popupImg);
+  //   popupImgSrc.src = this._link;
+  //   popupImgSrc.alt = this._cardTitle;
+  //   popupImgText.textContent = this._cardTitle;
+  // }
 
   _addEvtListenersToCard() {
     this._element
@@ -42,7 +42,7 @@ export class Card {
       .addEventListener('click', this._removeCardHandler);
     this._element
       .querySelector('.places__img')
-      .addEventListener('click', (e) => this._showBigImageHandler(e));
+      .addEventListener('click', () => this._handleCardClick(this._link, this._cardTitle));
   }
 
   generateCard() {

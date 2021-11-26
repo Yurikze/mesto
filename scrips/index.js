@@ -2,6 +2,8 @@ import { initialCards } from './utils.js';
 import { Card } from './Card.js';
 import { FormValidator } from './FormValidator.js';
 import Section from './components/Section.js';
+import PopupWithImage from './components/PopupWithImage.js';
+import Popup from './components/Popup.js';
 
 const title = document.querySelector('.profile__title');
 const subtitle = document.querySelector('.profile__subtitle');
@@ -18,7 +20,7 @@ const placeTitleInput = popupAdd.querySelector('[name=title].popup__input');
 const placeImgSrcInput = popupAdd.querySelector('[name=subtitle].popup__input');
 const forms = [...document.querySelectorAll('.popup__form')];
 
-
+const imagePopup = new PopupWithImage('.popup-image');
 
 forms.forEach((form) => {
   const validateForm = new FormValidator(
@@ -52,7 +54,7 @@ const openPopupHandler = (popup) => {
 const placesSection = new Section({
   items: initialCards,
   renderer: (placeItem) => {
-    const place = new Card(placeItem, '#place__li');
+    const place = new Card(placeItem, '#place__li', imagePopup.open);
     const placeElem = place.generateCard();
     placesSection.addItem(placeElem)
   }

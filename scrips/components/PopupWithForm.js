@@ -10,28 +10,27 @@ export default class PopupWithForm extends Popup {
 
   open(data = {}) {
     super.open();
-    this._inputs[0].value = data.name;
-    this._inputs[1].value = data.userInfo;
+    this._inputs[0].value = data.name || '';
+    this._inputs[1].value = data.userInfo || '';
   }
 
-  close(e) {
-    super.close(e)
-    if (e.type === 'submit') {
-      this._form.reset()
-    }
-  }
-
-  _onFormSubmit(e) {
+  _onFormSubmit = (e) => {
     e.preventDefault();
     const data = this._getInputValues(); //Получаем данные из полей формы
     this._handleFormSubmit(data); //Передаем данные в колбэк конструктора попапа
     this._form.removeEventListener('submit', this._onFormSubmit);
     this.close(e);
+    this._form.reset();
   }
 
   setEventListeners() {
     super.setEventListeners();
-    this._form.addEventListener('submit', this._onFormSubmit.bind(this));
+    this._form.addEventListener('submit', this._onFormSubmit);
+  }
+
+  _removeEventListeners() {
+    super._removeEventListeners()
+    this._form.removeEventListener('submit', this._onFormSubmit)
   }
 
   _getInputValues() {

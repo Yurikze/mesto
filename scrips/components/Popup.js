@@ -8,7 +8,7 @@ export default class Popup {
     this.setEventListeners();
   }
 
-  close(e) {
+  close = (e) => {
     if (
       e.target === e.currentTarget ||
       e.target.classList.contains('popup__close-btn')
@@ -24,7 +24,7 @@ export default class Popup {
 
   setEventListeners() {
     document.addEventListener('keydown', this._handleEscClose);
-    this._popup.addEventListener('click', this.close.bind(this));
+    this._popup.addEventListener('click', this.close);
   }
 
   _removeEventListeners() {

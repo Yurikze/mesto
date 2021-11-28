@@ -1,5 +1,3 @@
-import { popupImg, popupImgSrc, popupImgText } from './utils.js';
-
 export class Card {
   constructor(data, tmpSelector, handleCardClick) {
     this._handleCardClick = handleCardClick;
@@ -25,13 +23,6 @@ export class Card {
   _removeCardHandler(e) {
     this.closest('.places__li').remove();
   }
-
-  // _showBigImageHandler(e) {
-  //   this._handleCardClick(popupImg);
-  //   popupImgSrc.src = this._link;
-  //   popupImgSrc.alt = this._cardTitle;
-  //   popupImgText.textContent = this._cardTitle;
-  // }
 
   _addEvtListenersToCard() {
     this._element

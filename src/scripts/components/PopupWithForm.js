@@ -16,12 +16,15 @@ export default class PopupWithForm extends Popup {
 
   _onFormSubmit = (e) => {
     e.preventDefault();
+    const submitBtn = this._form.querySelector('.popup__submit');
     const data = this._getInputValues(); //Получаем данные из полей формы
     this._handleFormSubmit(data); //Передаем данные в колбэк конструктора попапа
     this._form.removeEventListener('submit', this._onFormSubmit);
     this.close(e);
     this._form.reset();
-  }
+    submitBtn.disabled = true;
+    submitBtn.classList.add('popup__submit_disabled');
+  };
 
   setEventListeners() {
     super.setEventListeners();
@@ -29,8 +32,8 @@ export default class PopupWithForm extends Popup {
   }
 
   _removeEventListeners() {
-    super._removeEventListeners()
-    this._form.removeEventListener('submit', this._onFormSubmit)
+    super._removeEventListeners();
+    this._form.removeEventListener('submit', this._onFormSubmit);
   }
 
   _getInputValues() {

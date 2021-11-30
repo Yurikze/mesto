@@ -1,5 +1,5 @@
-export class Card {
-  constructor(data, tmpSelector, handleCardClick) {
+export default class Card {
+  constructor({data, tmpSelector, handleCardClick}) {
     this._handleCardClick = handleCardClick;
 
     this._cardTitle = data.name;
@@ -22,6 +22,7 @@ export class Card {
 
   _removeCardHandler(e) {
     this.closest('.places__li').remove();
+    this._element = null;
   }
 
   _addEvtListenersToCard() {

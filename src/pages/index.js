@@ -18,13 +18,6 @@ const userInfo = new UserInfo({
 
 const imagePopup = new PopupWithImage('.popup-image');
 
-const editPopup = new PopupWithForm({
-  popupSelector: '.popup-edit',
-  handleFormSubmit: (data) => {
-    userInfo.setUserInfo(data);
-  },
-});
-
 const placesSection = new Section(
   {
     items: initialCards,
@@ -37,16 +30,32 @@ const placesSection = new Section(
   '.places__list'
 );
 
+placesSection.renderItems();
+
+
 const addPopup = new PopupWithForm({
   popupSelector: '.popup-add',
-  handleFormSubmit: (data) => {
-    const place = new Card(
-      { name: data.title, link: data.subtitle },
-      '#place__li',
-      imagePopup.open
-    );
+  handleFormSubmit: (e) => {
+    e.preventDefault()
+    const data = addPopup._getInputValues();
+    const place = new Card({
+      data: { name: data.title, link: data.subtitle },
+      tmpSelector: '#place__li',
+      handleCardClick: imagePopup.open
+    });
     const placeElem = place.generateCard();
     placesSection.addItem(placeElem);
+    addPopup.close(e)
+  },
+});
+
+const editPopup = new PopupWithForm({
+  popupSelector: '.popup-edit',
+  handleFormSubmit: (e) => {
+    e.preventDefault()
+    const data = editPopup._getInputValues();
+    userInfo.setUserInfo(data)
+    editPopup.close(e)
   },
 });
 
@@ -64,9 +73,17 @@ forms.forEach((form) => {
   validateForm.enableValidation();
 });
 
-placesSection.renderItems();
 
-editBtn.addEventListener('click', () =>
-  editPopup.open.bind(editPopup)(userInfo.getUserInfo())
-);
-addBtn.addEventListener('click', addPopup.open.bind(addPopup));
+const onOpenEditPopoup = () => {
+  editPopup.open.bind(editPopup)()
+  const data = userInfo.getUserInfo()
+  editPopup.setEventListeners(data)
+}
+
+const onOpenAddPopup = () => {
+  addPopup.open.bind(addPopup)()
+  addPopup.setEventListeners()
+}
+
+editBtn.addEventListener('click', onOpenEditPopoup)
+addBtn.addEventListener('click', onOpenAddPopup);

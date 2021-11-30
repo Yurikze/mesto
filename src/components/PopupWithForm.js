@@ -8,32 +8,23 @@ export default class PopupWithForm extends Popup {
     this._inputs = this._popup.querySelectorAll('.popup__input');
   }
 
-  open(data = {}) {
-    super.open();
-    this._inputs[0].value = data.name || '';
-    this._inputs[1].value = data.userInfo || '';
-  }
-
-  _onFormSubmit = (e) => {
-    e.preventDefault();
-    const submitBtn = this._form.querySelector('.popup__submit');
-    const data = this._getInputValues(); //Получаем данные из полей формы
-    this._handleFormSubmit(data); //Передаем данные в колбэк конструктора попапа
-    this._form.removeEventListener('submit', this._onFormSubmit);
-    this.close(e);
-    this._form.reset();
-    submitBtn.disabled = true;
-    submitBtn.classList.add('popup__submit_disabled');
+  close = (e) => {
+    super.close(e);
+    if (super.close(e)) {
+      const submitBtn = this._form.querySelector('.popup__submit');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('popup__submit_disabled');
+    }
   };
 
-  setEventListeners() {
+  setEventListeners(data = {}) {
     super.setEventListeners();
-    this._form.addEventListener('submit', this._onFormSubmit);
-  }
-
-  _removeEventListeners() {
-    super._removeEventListeners();
-    this._form.removeEventListener('submit', this._onFormSubmit);
+    this._form.addEventListener('submit', (evt) => {
+      // Если не удалять обработчик сабмита с формы, тогда при каждом открытии попапа создаются новые обработчики. Непонятно, почему не нужно удать сабмит.
+      this._handleFormSubmit(evt);
+    });
+    this._inputs[0].value = data.name || ''; // Это не только очистка полей форма, но в первую очередь установка значение инпутов формы редактирования данных пользователя.
+    this._inputs[1].value = data.userInfo || '';
   }
 
   _getInputValues() {

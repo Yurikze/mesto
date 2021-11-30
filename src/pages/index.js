@@ -1,10 +1,10 @@
-import { initialCards } from './utils.js';
-import { Card } from './components/Card.js';
-import { FormValidator } from './components/FormValidator.js';
-import Section from './components/Section.js';
-import PopupWithImage from './components/PopupWithImage.js';
-import PopupWithForm from './components/PopupWithForm.js';
-import UserInfo from './components/UserInfo.js';
+import { initialCards } from '../utils/utils.js';
+import Card from '../components/Card.js';
+import FormValidator from '../components/FormValidator.js';
+import Section from '../components/Section.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import UserInfo from '../components/UserInfo.js';
 import '../pages/index.css';
 
 const editBtn = document.querySelector('.profile__edit');
@@ -16,7 +16,7 @@ const userInfo = new UserInfo({
   userInfo: '.profile__subtitle',
 });
 
-const imagePopup = new PopupWithImage({ popupSelector: '.popup-image' });
+const imagePopup = new PopupWithImage('.popup-image');
 
 const editPopup = new PopupWithForm({
   popupSelector: '.popup-edit',
@@ -24,6 +24,18 @@ const editPopup = new PopupWithForm({
     userInfo.setUserInfo(data);
   },
 });
+
+const placesSection = new Section(
+  {
+    items: initialCards,
+    renderer: (placeItem) => {
+      const place = new Card({data: placeItem, tmpSelector: '#place__li', handleCardClick: imagePopup.open});
+      const placeElem = place.generateCard();
+      placesSection.addItem(placeElem);
+    },
+  },
+  '.places__list'
+);
 
 const addPopup = new PopupWithForm({
   popupSelector: '.popup-add',
@@ -51,18 +63,6 @@ forms.forEach((form) => {
   );
   validateForm.enableValidation();
 });
-
-const placesSection = new Section(
-  {
-    items: initialCards,
-    renderer: (placeItem) => {
-      const place = new Card(placeItem, '#place__li', imagePopup.open);
-      const placeElem = place.generateCard();
-      placesSection.addItem(placeElem);
-    },
-  },
-  '.places__list'
-);
 
 placesSection.renderItems();
 

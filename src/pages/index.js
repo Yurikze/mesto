@@ -75,13 +75,13 @@ forms.forEach((form) => {
 
 
 const onOpenEditPopoup = () => {
-  editPopup.open.bind(editPopup)()
+  editPopup.open()
   const data = userInfo.getUserInfo()
   editPopup.setEventListeners(data)
 }
 
 const onOpenAddPopup = () => {
-  addPopup.open.bind(addPopup)()
+  addPopup.open()
   addPopup.setEventListeners()
 }
 

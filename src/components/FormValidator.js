@@ -8,6 +8,10 @@ export default class FormValidator {
     this._inputSelector = inputSelector;
   }
 
+  text() {
+    console.log(1)
+  }
+
   _addListenerToInput(input) {
     input.addEventListener('input', (evt) => this._handleFieldValidation(evt));
   }

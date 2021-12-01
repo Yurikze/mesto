@@ -8,22 +8,28 @@ export default class PopupWithForm extends Popup {
     this._inputs = this._popup.querySelectorAll('.popup__input');
   }
 
-  close = (e) => {
+  close(e) {
     super.close(e);
-    if (super.close(e)) {
+    if (
+      e.target === e.currentTarget ||
+      e.target.classList.contains('popup__close-btn') ||
+      e.type === 'sumbit'
+    ) {
+      this._form.reset();
+
+      // Если избавиться от операций с кнопкой внутри попапа, тогда после сабмита формы, при открытии попапа кнопка сабмита активна,
+      // так как не срабатывает никакой метод класса FormValidator
+
       const submitBtn = this._form.querySelector('.popup__submit');
       submitBtn.disabled = true;
       submitBtn.classList.add('popup__submit_disabled');
     }
-  };
+  }
 
   setEventListeners(data = {}) {
     super.setEventListeners();
-    this._form.addEventListener('submit', (evt) => {
-      // Если не удалять обработчик сабмита с формы, тогда при каждом открытии попапа создаются новые обработчики. Непонятно, почему не нужно удать сабмит.
-      this._handleFormSubmit(evt);
-    });
-    this._inputs[0].value = data.name || ''; // Это не только очистка полей форма, но в первую очередь установка значение инпутов формы редактирования данных пользователя.
+    this._form.addEventListener('submit', this._handleFormSubmit);
+    this._inputs[0].value = data.name || '';
     this._inputs[1].value = data.userInfo || '';
   }
 

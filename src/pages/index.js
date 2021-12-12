@@ -5,57 +5,89 @@ import Section from '../components/Section.js';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import UserInfo from '../components/UserInfo.js';
+import Api from '../components/Api.js';
 import '../pages/index.css';
 
 const editBtn = document.querySelector('.profile__edit');
 const addBtn = document.querySelector('.profile__add-btn');
 const forms = [...document.querySelectorAll('.popup__form')];
 
-const userInfo = new UserInfo({
-  userName: '.profile__title',
-  userInfo: '.profile__subtitle',
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-31',
+  headers: {
+    authorization: '3af5a01e-7b93-4927-85da-faee16dd46e6',
+    'Content-Type': 'application/json',
+  },
 });
 
-const imagePopup = new PopupWithImage('.popup-image');
+const getUserInfo = api.getUserInfo();
+const getInitialCards = api.getInitialCards();
+Promise.all([getUserInfo, getInitialCards])
+  .then((res) => {
+    const userInfo = new UserInfo({
+      userName: '.profile__title',
+      userInfo: '.profile__subtitle',
+    });
 
-const placesSection = new Section(
-  {
-    items: initialCards,
-    renderer: (placeItem) => {
-      const place = new Card({data: placeItem, tmpSelector: '#place__li', handleCardClick: imagePopup.open});
-      const placeElem = place.generateCard();
-      placesSection.addItem(placeElem);
-    },
-  },
-  '.places__list'
-);
+    const imagePopup = new PopupWithImage('.popup-image');
 
-placesSection.renderItems();
+    const placesSection = new Section(
+      {
+        items: res[1].reverse(),
+        renderer: (placeItem) => {
+          const place = new Card({
+            data: placeItem,
+            tmpSelector: '#place__li',
+            handleCardClick: imagePopup.open,
+          });
+          const placeElem = place.generateCard();
+          placesSection.addItem(placeElem);
+        },
+      },
+      '.places__list'
+    );
 
+    return {
+      userData: res[0],
+      userInfo,
+      placesSection,
+      imagePopup,
+    };
+  })
+  .then(({ userData, userInfo, placesSection, imagePopup }) => {
+    userInfo.setUserInfo({
+      userName: userData.name,
+      userInfo: userData.about,
+    });
+
+    placesSection.renderItems();
+  });
+
+  
 
 const addPopup = new PopupWithForm({
   popupSelector: '.popup-add',
   handleFormSubmit: (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = addPopup._getInputValues();
     const place = new Card({
       data: { name: data.title, link: data.subtitle },
       tmpSelector: '#place__li',
-      handleCardClick: imagePopup.open
+      handleCardClick: imagePopup.open,
     });
     const placeElem = place.generateCard();
     placesSection.addItem(placeElem);
-    addPopup.close(e)
+    addPopup.close(e);
   },
 });
 
 const editPopup = new PopupWithForm({
   popupSelector: '.popup-edit',
   handleFormSubmit: (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = editPopup._getInputValues();
-    userInfo.setUserInfo(data)
-    editPopup.close(e)
+    userInfo.setUserInfo(data);
+    editPopup.close(e);
   },
 });
 
@@ -73,17 +105,16 @@ forms.forEach((form) => {
   validateForm.enableValidation();
 });
 
-
 const onOpenEditPopoup = () => {
-  editPopup.open()
-  const data = userInfo.getUserInfo()
-  editPopup.setEventListeners(data)
-}
+  editPopup.open();
+  const data = userInfo.getUserInfo();
+  editPopup.setEventListeners(data);
+};
 
 const onOpenAddPopup = () => {
-  addPopup.open()
-  addPopup.setEventListeners()
-}
+  addPopup.open();
+  addPopup.setEventListeners();
+};
 
-editBtn.addEventListener('click', onOpenEditPopoup)
+editBtn.addEventListener('click', onOpenEditPopoup);
 addBtn.addEventListener('click', onOpenAddPopup);

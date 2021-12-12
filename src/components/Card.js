@@ -1,10 +1,11 @@
 export default class Card {
-  constructor({data, tmpSelector, handleCardClick}) {
+  constructor({id, data, tmpSelector, handleCardClick, likes}) {
     this._handleCardClick = handleCardClick;
-
+    this.id = id
     this._cardTitle = data.name;
     this._link = data.link;
     this._tmpSelector = tmpSelector;
+    this._likes = likes;
   }
 
   _getTemplate() {
@@ -43,8 +44,8 @@ export default class Card {
     placeImg.src = this._link;
     placeImg.alt = this._cardTitle;
     this._element.querySelector('.places__title').textContent = this._cardTitle;
+    this._element.querySelector('.places__like-count').textContent = this._likes.length;
     this._addEvtListenersToCard();
-
     return this._element;
   }
 }

@@ -1,4 +1,3 @@
-import { initialCards } from '../utils/utils.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Section from '../components/Section.js';
@@ -36,8 +35,10 @@ Promise.all([getUserInfo, getInitialCards])
         items: res[1].reverse(),
         renderer: (placeItem) => {
           const place = new Card({
+            id: placeItem._id,
             data: placeItem,
             tmpSelector: '#place__li',
+            likes: placeItem.likes,
             handleCardClick: imagePopup.open,
           });
           const placeElem = place.generateCard();
@@ -47,6 +48,58 @@ Promise.all([getUserInfo, getInitialCards])
       '.places__list'
     );
 
+    const editPopup = new PopupWithForm({
+      popupSelector: '.popup-edit',
+      handleFormSubmit: (e) => {
+        e.preventDefault();
+        const data = editPopup._getInputValues();
+        api
+          .updateUserInfo({ name: data.userName, about: data.userInfo })
+          .then((res) => {
+            userInfo.setUserInfo(data);
+          })
+          .catch((err) => {
+            console.log(`Ошибка ${err}`);
+          });
+        editPopup.close(e);
+      },
+    });
+
+    const addPopup = new PopupWithForm({
+      popupSelector: '.popup-add',
+      handleFormSubmit: (e) => {
+        e.preventDefault();
+        const data = addPopup._getInputValues();
+        api.addCard({ name: data.title, link: data.subtitle }).then((res) => {
+          const place = new Card({
+            data: {id: res._id, name: res.name, link: res.link },
+            tmpSelector: '#place__li',
+            handleCardClick: imagePopup.open,
+          });
+          console.log(place)
+          const placeElem = place.generateCard();
+          placesSection.addItem(placeElem);
+        });
+
+        addPopup.close(e);
+      },
+    });
+
+    const onOpenEditPopoup = () => {
+      editPopup.open();
+      const data = userInfo.getUserInfo();
+      editPopup.setEventListeners(data);
+    };
+
+    editBtn.addEventListener('click', onOpenEditPopoup);
+
+    const onOpenAddPopup = () => {
+      addPopup.open();
+      addPopup.setEventListeners();
+    };
+
+    addBtn.addEventListener('click', onOpenAddPopup);
+
     return {
       userData: res[0],
       userInfo,
@@ -54,7 +107,7 @@ Promise.all([getUserInfo, getInitialCards])
       imagePopup,
     };
   })
-  .then(({ userData, userInfo, placesSection, imagePopup }) => {
+  .then(({ userData, userInfo, placesSection }) => {
     userInfo.setUserInfo({
       userName: userData.name,
       userInfo: userData.about,
@@ -62,34 +115,6 @@ Promise.all([getUserInfo, getInitialCards])
 
     placesSection.renderItems();
   });
-
-  
-
-const addPopup = new PopupWithForm({
-  popupSelector: '.popup-add',
-  handleFormSubmit: (e) => {
-    e.preventDefault();
-    const data = addPopup._getInputValues();
-    const place = new Card({
-      data: { name: data.title, link: data.subtitle },
-      tmpSelector: '#place__li',
-      handleCardClick: imagePopup.open,
-    });
-    const placeElem = place.generateCard();
-    placesSection.addItem(placeElem);
-    addPopup.close(e);
-  },
-});
-
-const editPopup = new PopupWithForm({
-  popupSelector: '.popup-edit',
-  handleFormSubmit: (e) => {
-    e.preventDefault();
-    const data = editPopup._getInputValues();
-    userInfo.setUserInfo(data);
-    editPopup.close(e);
-  },
-});
 
 forms.forEach((form) => {
   const validateForm = new FormValidator(
@@ -104,17 +129,3 @@ forms.forEach((form) => {
   );
   validateForm.enableValidation();
 });
-
-const onOpenEditPopoup = () => {
-  editPopup.open();
-  const data = userInfo.getUserInfo();
-  editPopup.setEventListeners(data);
-};
-
-const onOpenAddPopup = () => {
-  addPopup.open();
-  addPopup.setEventListeners();
-};
-
-editBtn.addEventListener('click', onOpenEditPopoup);
-addBtn.addEventListener('click', onOpenAddPopup);

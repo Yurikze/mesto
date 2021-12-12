@@ -24,4 +24,26 @@ export default class Api {
     }).then(res => this._parseResponse(res))
   }
 
+  updateUserInfo(userData) {
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify({
+        name: userData.name,
+        about: userData.about
+      })
+    }).then(res => this._parseResponse(res))
+  }
+
+  addCard(userData) {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({
+        name: userData.name,
+        link: userData.link
+      })
+    }).then(res => this._parseResponse(res))
+  }
+
 }

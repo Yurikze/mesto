@@ -1,11 +1,20 @@
 export default class Card {
-  constructor({id, data, tmpSelector, handleCardClick, likes}) {
+  constructor({
+    data,
+    tmpSelector,
+    handleCardClick,
+    handleDeleteIconClick,
+    handleLikeClick,
+  }) {
     this._handleCardClick = handleCardClick;
-    this.id = id
+    this._handleLikeClick = handleLikeClick;
+    this._handleDeleteIconClick = handleDeleteIconClick;
+    this._id = data._id;
     this._cardTitle = data.name;
     this._link = data.link;
     this._tmpSelector = tmpSelector;
-    this._likes = likes;
+    this._likes = data.likes;
+    this._myId = data.myId;
   }
 
   _getTemplate() {
@@ -17,8 +26,25 @@ export default class Card {
     return cardEl;
   }
 
-  _toggleLikeHandler(e) {
-    e.target.classList.toggle('places__like-btn_active');
+  _setLikes(likes) {
+    this._likes = likes;
+  }
+
+  _isLiked() {
+    return Boolean(this._likes.find((item) => item._id === this._myId));
+  }
+
+  _setLikeState() {
+    if (this._isLiked()) {
+      this._likeBtn.classList.add('places__like-btn_active');
+    } else {
+      this._likeBtn.classList.remove('places__like-btn_active');
+    }
+  }
+
+  _setLikeCount() {
+    this._likeCount.textContent =
+      this._likes.length;
   }
 
   _removeCardHandler(e) {
@@ -29,13 +55,15 @@ export default class Card {
   _addEvtListenersToCard() {
     this._element
       .querySelector('.places__like-btn')
-      .addEventListener('click', this._toggleLikeHandler);
+      .addEventListener('click', () => this._handleLikeClick(this));
     this._element
       .querySelector('.places__delete-icon')
-      .addEventListener('click', this._removeCardHandler);
+      .addEventListener('click', () => this._handleDeleteIconClick(this));
     this._element
       .querySelector('.places__img')
-      .addEventListener('click', () => this._handleCardClick(this._link, this._cardTitle));
+      .addEventListener('click', () =>
+        this._handleCardClick(this._link, this._cardTitle)
+      );
   }
 
   generateCard() {
@@ -44,7 +72,10 @@ export default class Card {
     placeImg.src = this._link;
     placeImg.alt = this._cardTitle;
     this._element.querySelector('.places__title').textContent = this._cardTitle;
-    this._element.querySelector('.places__like-count').textContent = this._likes.length;
+    this._likeCount = this._element.querySelector('.places__like-count');
+    this._likeBtn = this._element.querySelector('.places__like-btn');
+    this._setLikeState();
+    this._setLikeCount()
     this._addEvtListenersToCard();
     return this._element;
   }

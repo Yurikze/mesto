@@ -46,4 +46,18 @@ export default class Api {
     }).then(res => this._parseResponse(res))
   }
 
+  deleteCard(cardId) {
+    return fetch(`${this.baseUrl}/cards/${cardId}`, {
+      method: 'DELETE',
+      headers: this.headers
+    }).then(res => this._parseResponse(res))
+  }
+
+  likeCard(cardId, liked) {
+    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+      headers: this.headers,
+      method: liked ? 'DELETE' : 'PUT'
+    }).then(res => this._parseResponse(res))
+  }
+
 }

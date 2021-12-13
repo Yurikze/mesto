@@ -3,6 +3,7 @@ import FormValidator from '../components/FormValidator.js';
 import Section from '../components/Section.js';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
+import PopupWithSubmit from '../components/PopupWithSubmit.js';
 import UserInfo from '../components/UserInfo.js';
 import Api from '../components/Api.js';
 import '../pages/index.css';
@@ -22,25 +23,59 @@ const api = new Api({
 const getUserInfo = api.getUserInfo();
 const getInitialCards = api.getInitialCards();
 Promise.all([getUserInfo, getInitialCards])
-  .then((res) => {
+  .then(([userData, initialCards]) => {
     const userInfo = new UserInfo({
       userName: '.profile__title',
       userInfo: '.profile__subtitle',
     });
+    userInfo.setUserInfo({
+      userName: userData.name,
+      userInfo: userData.about,
+    });
+    userInfo.setUserId(userData._id);
 
     const imagePopup = new PopupWithImage('.popup-image');
 
+    const deletePopup = new PopupWithSubmit({
+      popupSelector: '.popup-delete',
+      handleSubmit: (e) => {
+        api.deleteCard(deletePopup._cardId).then((res) => {
+          console.log(deletePopup._cardId, res);
+        });
+        deletePopup.close(e);
+      },
+    });
+
+    const returnNewPlace = (data) => {
+      const place = new Card({
+        data: { ...data, myId: userInfo.getUserInfo().userId },
+        tmpSelector: '#place__li',
+        handleCardClick: imagePopup.open,
+        handleDeleteIconClick: (card) => {
+          deletePopup.open(card);
+          deletePopup.setEventListeners();
+        },
+        handleLikeClick: (card) => {
+          api
+            .likeCard(card._id, card._isLiked())
+            .then((res) => {
+              card._setLikes(res.likes);
+              card._setLikeState();
+              card._setLikeCount();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      });
+      return place;
+    };
+
     const placesSection = new Section(
       {
-        items: res[1].reverse(),
+        items: initialCards.reverse(),
         renderer: (placeItem) => {
-          const place = new Card({
-            id: placeItem._id,
-            data: placeItem,
-            tmpSelector: '#place__li',
-            likes: placeItem.likes,
-            handleCardClick: imagePopup.open,
-          });
+          const place = returnNewPlace(placeItem);
           const placeElem = place.generateCard();
           placesSection.addItem(placeElem);
         },
@@ -71,12 +106,7 @@ Promise.all([getUserInfo, getInitialCards])
         e.preventDefault();
         const data = addPopup._getInputValues();
         api.addCard({ name: data.title, link: data.subtitle }).then((res) => {
-          const place = new Card({
-            data: {id: res._id, name: res.name, link: res.link },
-            tmpSelector: '#place__li',
-            handleCardClick: imagePopup.open,
-          });
-          console.log(place)
+          const place = returnNewPlace(res);
           const placeElem = place.generateCard();
           placesSection.addItem(placeElem);
         });
@@ -101,19 +131,14 @@ Promise.all([getUserInfo, getInitialCards])
     addBtn.addEventListener('click', onOpenAddPopup);
 
     return {
-      userData: res[0],
-      userInfo,
       placesSection,
-      imagePopup,
     };
   })
-  .then(({ userData, userInfo, placesSection }) => {
-    userInfo.setUserInfo({
-      userName: userData.name,
-      userInfo: userData.about,
-    });
-
+  .then(({ placesSection }) => {
     placesSection.renderItems();
+  })
+  .catch((err) => {
+    console.log(err);
   });
 
 forms.forEach((form) => {

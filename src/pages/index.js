@@ -39,10 +39,13 @@ Promise.all([getUserInfo, getInitialCards])
     const deletePopup = new PopupWithSubmit({
       popupSelector: '.popup-delete',
       handleSubmit: (e) => {
-        api.deleteCard(deletePopup._cardId).then((res) => {
-          console.log(deletePopup._cardId, res);
-        });
-        deletePopup.close(e);
+        api
+          .deleteCard(deletePopup.card._id)
+          .then((res) => {
+            deletePopup.card._element.remove();
+            deletePopup.close(e);
+          })
+          .catch((err) => console.log(`Ошибка удаления: ${err}`));
       },
     });
 

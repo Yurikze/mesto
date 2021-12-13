@@ -15,6 +15,7 @@ export default class Card {
     this._tmpSelector = tmpSelector;
     this._likes = data.likes;
     this._myId = data.myId;
+    this._owner = data.owner._id
   }
 
   _getTemplate() {
@@ -43,8 +44,7 @@ export default class Card {
   }
 
   _setLikeCount() {
-    this._likeCount.textContent =
-      this._likes.length;
+    this._likeCount.textContent = this._likes.length;
   }
 
   _removeCardHandler(e) {
@@ -53,12 +53,10 @@ export default class Card {
   }
 
   _addEvtListenersToCard() {
-    this._element
-      .querySelector('.places__like-btn')
-      .addEventListener('click', () => this._handleLikeClick(this));
-    this._element
-      .querySelector('.places__delete-icon')
-      .addEventListener('click', () => this._handleDeleteIconClick(this));
+    this._likeBtn.addEventListener('click', () => this._handleLikeClick(this));
+    this._deleteBtn.addEventListener('click', () =>
+      this._handleDeleteIconClick(this)
+    );
     this._element
       .querySelector('.places__img')
       .addEventListener('click', () =>
@@ -74,8 +72,10 @@ export default class Card {
     this._element.querySelector('.places__title').textContent = this._cardTitle;
     this._likeCount = this._element.querySelector('.places__like-count');
     this._likeBtn = this._element.querySelector('.places__like-btn');
+    this._deleteBtn = this._element.querySelector('.places__delete-icon');
+    this._myId !== this._owner ? this._deleteBtn.style.display = 'none' : 'block'
     this._setLikeState();
-    this._setLikeCount()
+    this._setLikeCount();
     this._addEvtListenersToCard();
     return this._element;
   }

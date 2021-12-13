@@ -8,12 +8,12 @@ export default class PopupWithSubmit extends Popup {
   }
 
   open = (card) => {
-    this._cardId = card._id
+    this.card = card
     super.open()
   }
 
   setEventListeners() {
     super.setEventListeners()
-    this._btn.addEventListener('click', this._handleSubmit)
+    this._btn.addEventListener('click', () => this._handleSubmit(this.card))
   }
 }

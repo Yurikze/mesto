@@ -34,12 +34,17 @@ Promise.all([getUserInfo, getInitialCards])
       popupSelector: '.popup-avatar',
       handleFormSubmit: (e) => {
         e.preventDefault();
+        avatarPopup.renderLoading(true)
         api
           .updateAvatar(avatarPopup._getInputValues().avaUrl)
           .then((res) => {
             avatar.setUserAvatar(res.avatar);
           })
-          .catch((err) => `Error setting avatar ${err}`);
+          .catch((err) => `Error setting avatar ${err}`)
+          .finally(() => {
+            avatarPopup.renderLoading(false)
+            avatarPopup.close(e);
+          });
       },
     });
 

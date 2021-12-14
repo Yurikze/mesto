@@ -1,0 +1,30 @@
+.profile__ava-container {
+  position: relative;
+  margin-right: 30px;
+}
+
+.profile__ava-container::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url('../../../images/Edit.svg') no-repeat center;
+  background-color: rgba(0, 0, 0, .8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility .1s, opacity .1s;
+}
+
+.profile__ava-container:hover::after {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .profile__ava-container {
+    margin: 0 0 26px;
+  }
+}

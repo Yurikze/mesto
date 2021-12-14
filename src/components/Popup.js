@@ -11,7 +11,8 @@ export default class Popup {
   close(e) {
     if (
       e.target === e.currentTarget ||
-      e.target.classList.contains('popup__close-btn')
+      e.target.classList.contains('popup__close-btn') ||
+      e.target.classList.contains('popup__submit')
     ) {
       this._popup.classList.remove('popup_is-visible');
       this._popup.removeEventListener('click', this.close);

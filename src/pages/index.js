@@ -36,18 +36,7 @@ Promise.all([getUserInfo, getInitialCards])
 
     const imagePopup = new PopupWithImage('.popup-image');
 
-    const deletePopup = new PopupWithSubmit({
-      popupSelector: '.popup-delete',
-      handleSubmit: (e) => {
-        api
-          .deleteCard(deletePopup.card._id)
-          .then((res) => {
-            deletePopup.card._element.remove();
-            deletePopup.close(e);
-          })
-          .catch((err) => console.log(`Ошибка удаления: ${err}`));
-      },
-    });
+    const deletePopup = new PopupWithSubmit('.popup-delete');
 
     const returnNewPlace = (data) => {
       const place = new Card({
@@ -55,7 +44,16 @@ Promise.all([getUserInfo, getInitialCards])
         tmpSelector: '#place__li',
         handleCardClick: imagePopup.open,
         handleDeleteIconClick: (card) => {
-          deletePopup.open(card);
+          deletePopup.open();
+          deletePopup.setSubmitAction((e) => {
+            api
+              .deleteCard(card._id)
+              .then(() => {
+                card.removeCard();
+                deletePopup.close(e);
+              })
+              .catch((err) => console.log(`Ошибка удаления: ${err}`));
+          });
           deletePopup.setEventListeners();
         },
         handleLikeClick: (card) => {

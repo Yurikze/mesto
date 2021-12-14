@@ -15,7 +15,7 @@ export default class Card {
     this._tmpSelector = tmpSelector;
     this._likes = data.likes;
     this._myId = data.myId;
-    this._owner = data.owner._id
+    this._owner = data.owner._id;
   }
 
   _getTemplate() {
@@ -47,9 +47,8 @@ export default class Card {
     this._likeCount.textContent = this._likes.length;
   }
 
-  _removeCardHandler(e) {
-    this.closest('.places__li').remove();
-    this._element = null;
+  removeCard() {
+    this._element.remove();
   }
 
   _addEvtListenersToCard() {
@@ -73,7 +72,9 @@ export default class Card {
     this._likeCount = this._element.querySelector('.places__like-count');
     this._likeBtn = this._element.querySelector('.places__like-btn');
     this._deleteBtn = this._element.querySelector('.places__delete-icon');
-    this._myId !== this._owner ? this._deleteBtn.style.display = 'none' : 'block'
+    this._myId !== this._owner
+      ? (this._deleteBtn.style.display = 'none')
+      : 'block';
     this._setLikeState();
     this._setLikeCount();
     this._addEvtListenersToCard();

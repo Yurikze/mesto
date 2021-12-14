@@ -19,19 +19,19 @@
         <section class="profile">
           <div class="profile__ava-container">
             <img
-              src="<%=require('./images/kusto.jpg')%>"
+              src=""
               alt="Аватар профиля"
               class="profile__avatar"
             />
           </div>
           <div class="profile__info">
-            <h1 class="profile__title">Жак-Ив Кусто</h1>
+            <h1 class="profile__title"></h1>
             <button
               class="profile__edit"
               type="button"
               aria-label="Изменить"
             ></button>
-            <p class="profile__subtitle">Исследователь океана</p>
+            <p class="profile__subtitle"></p>
           </div>
           <button class="profile__add-btn" type="button">
             <img
@@ -49,6 +49,31 @@
       <footer class="footer">
         <p class="footer__text">&copy; 2020 Mesto Russia</p>
       </footer>
+      <div class="popup popup-avatar">
+        <div class="popup__content">
+          <button
+            class="popup__close-btn"
+            type="button"
+            aria-label="Закрыть"
+            data-delete
+          ></button>
+          <h2 class="popup__title">Новое место</h2>
+          <form class="popup__form" name="ava-form">
+            
+            <input
+              type="url"
+              name="avaUrl"
+              class="popup__input"
+              required
+              placeholder="Ссылка на картинку"
+              id="url-input"
+            />
+            <span class="popup__input-error url-input-error"></span>
+
+            <button type="submit" class="popup__submit">Сохранить</button>
+          </form>
+        </div>
+      </div>
       <div class="popup popup-delete">
         <div class="popup__content">
           <button

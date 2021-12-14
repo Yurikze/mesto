@@ -22,3 +22,9 @@
   visibility: visible;
   opacity: 1;
 }
+
+@media (max-width: 767px) {
+  .profile__ava-container {
+    margin: 0 0 26px;
+  }
+}

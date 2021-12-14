@@ -5,6 +5,7 @@ import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import PopupWithSubmit from '../components/PopupWithSubmit.js';
 import UserInfo from '../components/UserInfo.js';
+import Avatar from '../components/Avatar.js';
 import Api from '../components/Api.js';
 import '../pages/index.css';
 
@@ -28,15 +29,31 @@ Promise.all([getUserInfo, getInitialCards])
       userName: '.profile__title',
       userInfo: '.profile__subtitle',
     });
-    userInfo.setUserInfo({
-      userName: userData.name,
-      userInfo: userData.about,
+
+    const avatarPopup = new PopupWithForm({
+      popupSelector: '.popup-avatar',
+      handleFormSubmit: (e) => {
+        e.preventDefault();
+        api
+          .updateAvatar(avatarPopup._getInputValues().avaUrl)
+          .then((res) => {
+            avatar.setUserAvatar(res.avatar);
+          })
+          .catch((err) => `Error setting avatar ${err}`);
+      },
     });
-    userInfo.setUserId(userData._id);
 
     const imagePopup = new PopupWithImage('.popup-image');
 
     const deletePopup = new PopupWithSubmit('.popup-delete');
+
+    const avatar = new Avatar({
+      avaSelector: '.profile__ava-container',
+      clickHandler: () => {
+        avatarPopup.open();
+        avatarPopup.setEventListeners();
+      },
+    });
 
     const returnNewPlace = (data) => {
       const place = new Card({
@@ -88,6 +105,7 @@ Promise.all([getUserInfo, getInitialCards])
       popupSelector: '.popup-edit',
       handleFormSubmit: (e) => {
         e.preventDefault();
+        editPopup.renderLoading(true);
         const data = editPopup._getInputValues();
         api
           .updateUserInfo({ name: data.userName, about: data.userInfo })
@@ -96,8 +114,11 @@ Promise.all([getUserInfo, getInitialCards])
           })
           .catch((err) => {
             console.log(`Ошибка ${err}`);
+          })
+          .finally(() => {
+            editPopup.renderLoading(false)
+            editPopup.close(e);
           });
-        editPopup.close(e);
       },
     });
 
@@ -110,9 +131,13 @@ Promise.all([getUserInfo, getInitialCards])
           const place = returnNewPlace(res);
           const placeElem = place.generateCard();
           placesSection.addItem(placeElem);
+        }).catch((err) => {
+          console.log(`Ошибка ${err}`);
+        })
+        .finally(() => {
+          addPopup.renderLoading(false)
+          addPopup.close(e);
         });
-
-        addPopup.close(e);
       },
     });
 
@@ -132,10 +157,19 @@ Promise.all([getUserInfo, getInitialCards])
     addBtn.addEventListener('click', onOpenAddPopup);
 
     return {
+      userData,
+      avatar,
       placesSection,
+      userInfo,
     };
   })
-  .then(({ placesSection }) => {
+  .then(({ placesSection, userData, avatar, userInfo }) => {
+    avatar.setUserAvatar(userData.avatar);
+    userInfo.setUserInfo({
+      userName: userData.name,
+      userInfo: userData.about,
+    });
+    userInfo.setUserId(userData._id);
     placesSection.renderItems();
   })
   .catch((err) => {

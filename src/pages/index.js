@@ -19,7 +19,6 @@ const config = {
 
 const editBtn = document.querySelector('.profile__edit');
 const addBtn = document.querySelector('.profile__add-btn');
-const forms = [...document.querySelectorAll('.popup__form')];
 
 const api = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-31',
@@ -107,6 +106,7 @@ const placesSection = new Section({
   containerSelector: '.places__list',
 });
 
+// Popup edit user info
 const editPopup = new PopupWithForm({
   popupSelector: '.popup-edit',
   handleFormSubmit: (data) => {
@@ -126,7 +126,13 @@ const editPopup = new PopupWithForm({
   },
 });
 editPopup.setEventListeners();
+const validatedFormEdit = new FormValidator(
+  config,
+  editPopup.form
+);
+validatedFormEdit.enableValidation();
 
+// Popup add place
 const addPopup = new PopupWithForm({
   popupSelector: '.popup-add',
   handleFormSubmit: (data) => {
@@ -147,28 +153,27 @@ const addPopup = new PopupWithForm({
   },
 });
 addPopup.setEventListeners()
+const validatedFormAdd = new FormValidator(
+  config,
+  addPopup.form
+);
+validatedFormAdd.enableValidation();
 
-const onOpenEditPopoup = () => {
+// Open popups listeners
+const onOpenEditPopup = () => {
   editPopup.open();
+  validatedFormEdit.setSubmitBtnState()
   const data = userInfo.getUserInfo();
   editPopup.setInputValues(data)
 };
 
-editBtn.addEventListener('click', onOpenEditPopoup);
-
 const onOpenAddPopup = () => {
   addPopup.open();
+  validatedFormAdd.setSubmitBtnState()
 };
 
+editBtn.addEventListener('click', onOpenEditPopup);
 addBtn.addEventListener('click', onOpenAddPopup);
-
-forms.forEach((form) => {
-  const validateForm = new FormValidator(
-    config,
-    form
-  );
-  validateForm.enableValidation();
-});
 
 // Async requests
 const getUserInfo = api.getUserInfo();
@@ -177,12 +182,12 @@ const getInitialCards = api.getInitialCards();
 Promise.all([getUserInfo, getInitialCards])
   .then(([userData, initialCards]) => {
     
-    avatar.setUserAvatar(userData.avatar);
+    userInfo.setUserId(userData._id);
     userInfo.setUserInfo({
       userName: userData.name,
       userInfo: userData.about,
     });
-    userInfo.setUserId(userData._id);
+    avatar.setUserAvatar(userData.avatar);
     placesSection.renderItems(initialCards);
 
   })

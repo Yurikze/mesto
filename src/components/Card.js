@@ -27,12 +27,18 @@ export default class Card {
     return cardEl;
   }
 
-  _setLikes(likes) {
-    this._likes = likes;
-  }
-
   _isLiked() {
     return Boolean(this._likes.find((item) => item._id === this._myId));
+  }
+
+  setLikesInfo(likes) {
+    this._setLikes(likes)
+    this._setLikeState()
+    this._setLikeCount()
+  }
+
+  _setLikes(likes) {
+    this._likes = likes;
   }
 
   _setLikeState() {

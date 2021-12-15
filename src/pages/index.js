@@ -34,16 +34,16 @@ Promise.all([getUserInfo, getInitialCards])
       popupSelector: '.popup-avatar',
       handleFormSubmit: (e) => {
         e.preventDefault();
-        avatarPopup.renderLoading(true)
+        avatarPopup.renderLoading(true);
         api
           .updateAvatar(avatarPopup._getInputValues().avaUrl)
           .then((res) => {
             avatar.setUserAvatar(res.avatar);
+            avatarPopup.close(e);
           })
           .catch((err) => `Error setting avatar ${err}`)
           .finally(() => {
-            avatarPopup.renderLoading(false)
-            avatarPopup.close(e);
+            avatarPopup.renderLoading(false);
           });
       },
     });
@@ -59,6 +59,7 @@ Promise.all([getUserInfo, getInitialCards])
         avatarPopup.setEventListeners();
       },
     });
+    avatar.setEventListeners()
 
     const returnNewPlace = (data) => {
       const place = new Card({
@@ -68,6 +69,7 @@ Promise.all([getUserInfo, getInitialCards])
         handleDeleteIconClick: (card) => {
           deletePopup.open();
           deletePopup.setSubmitAction((e) => {
+            e.preventDefault();
             api
               .deleteCard(card._id)
               .then(() => {
@@ -116,13 +118,13 @@ Promise.all([getUserInfo, getInitialCards])
           .updateUserInfo({ name: data.userName, about: data.userInfo })
           .then((res) => {
             userInfo.setUserInfo(data);
+            editPopup.close(e);
           })
           .catch((err) => {
             console.log(`Ошибка ${err}`);
           })
           .finally(() => {
-            editPopup.renderLoading(false)
-            editPopup.close(e);
+            editPopup.renderLoading(false);
           });
       },
     });
@@ -132,17 +134,20 @@ Promise.all([getUserInfo, getInitialCards])
       handleFormSubmit: (e) => {
         e.preventDefault();
         const data = addPopup._getInputValues();
-        api.addCard({ name: data.title, link: data.subtitle }).then((res) => {
-          const place = returnNewPlace(res);
-          const placeElem = place.generateCard();
-          placesSection.addItem(placeElem);
-        }).catch((err) => {
-          console.log(`Ошибка ${err}`);
-        })
-        .finally(() => {
-          addPopup.renderLoading(false)
-          addPopup.close(e);
-        });
+        api
+          .addCard({ name: data.title, link: data.subtitle })
+          .then((res) => {
+            const place = returnNewPlace(res);
+            const placeElem = place.generateCard();
+            placesSection.addItem(placeElem);
+            addPopup.close(e);
+          })
+          .catch((err) => {
+            console.log(`Ошибка ${err}`);
+          })
+          .finally(() => {
+            addPopup.renderLoading(false);
+          });
       },
     });
 

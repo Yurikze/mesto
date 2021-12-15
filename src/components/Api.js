@@ -43,21 +43,21 @@ export default class Api {
         name: userData.name,
         link: userData.link,
       }),
-    }).then((res) => this._parseResponse(res));
+    }).then(this._parseResponse);
   }
 
   deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: 'DELETE',
       headers: this.headers,
-    }).then((res) => this._parseResponse(res));
+    }).then(this._parseResponse);
   }
 
   likeCard(cardId, liked) {
     return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
       headers: this.headers,
       method: liked ? 'DELETE' : 'PUT',
-    }).then((res) => this._parseResponse(res));
+    }).then(this._parseResponse);
   }
 
   updateAvatar(avatar) {
@@ -67,6 +67,6 @@ export default class Api {
       body: JSON.stringify({
         avatar,
       }),
-    }).then((res) => this._parseResponse(res));
+    }).then(this._parseResponse);
   }
 }

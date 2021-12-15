@@ -2,7 +2,6 @@ export default class Avatar {
   constructor({avaSelector, clickHandler}) {
     this._avatar = document.querySelector(avaSelector)
     this._clickHandler = clickHandler
-    this.setEventListeners()
   }
 
   setUserAvatar(avatar) {

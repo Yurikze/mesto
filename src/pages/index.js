@@ -33,37 +33,13 @@ const userInfo = new UserInfo({
   userInfo: '.profile__subtitle',
 });
 
-const avatarPopup = new PopupWithForm({
-  popupSelector: '.popup-avatar',
-  handleFormSubmit: (data) => {
-    avatarPopup.renderLoading(true);
-    api
-      .updateAvatar(data.avaUrl)
-      .then((res) => {
-        avatar.setUserAvatar(res.avatar);
-        avatarPopup.close();
-      })
-      .catch((err) => `Error setting avatar ${err}`)
-      .finally(() => {
-        avatarPopup.renderLoading(false);
-      });
-  },
-});
-avatarPopup.setEventListeners();
+const avatar = new Avatar('.profile__ava-container');
 
 const imagePopup = new PopupWithImage('.popup-image');
 imagePopup.setEventListeners()
 
 const deletePopup = new PopupWithSubmit('.popup-delete');
 deletePopup.setEventListeners()
-
-const avatar = new Avatar({
-  avaSelector: '.profile__ava-container',
-  clickHandler: () => {
-    avatarPopup.open();
-  },
-});
-avatar.setEventListeners();
 
 
 const returnNewPlace = (data) => {
@@ -105,6 +81,30 @@ const placesSection = new Section({
   },
   containerSelector: '.places__list',
 });
+
+// Popup avatar
+const avatarPopup = new PopupWithForm({
+  popupSelector: '.popup-avatar',
+  handleFormSubmit: (data) => {
+    avatarPopup.renderLoading(true);
+    api
+      .updateAvatar(data.avaUrl)
+      .then((res) => {
+        avatar.setUserAvatar(res.avatar);
+        avatarPopup.close();
+      })
+      .catch((err) => `Error setting avatar ${err}`)
+      .finally(() => {
+        avatarPopup.renderLoading(false);
+      });
+  },
+});
+avatarPopup.setEventListeners();
+const validatedFormAvatar = new FormValidator(
+  config,
+  avatarPopup.form
+);
+validatedFormAvatar.enableValidation();
 
 // Popup edit user info
 const editPopup = new PopupWithForm({
@@ -162,16 +162,20 @@ validatedFormAdd.enableValidation();
 // Open popups listeners
 const onOpenEditPopup = () => {
   editPopup.open();
-  validatedFormEdit.setSubmitBtnState()
+  validatedFormEdit.resetValidation()
   const data = userInfo.getUserInfo();
   editPopup.setInputValues(data)
 };
 
 const onOpenAddPopup = () => {
   addPopup.open();
-  validatedFormAdd.setSubmitBtnState()
+  validatedFormAdd.resetValidation()
 };
 
+avatar.avaElement.addEventListener('click', () => {
+  avatarPopup.open()
+  validatedFormAvatar.resetValidation()
+})
 editBtn.addEventListener('click', onOpenEditPopup);
 addBtn.addEventListener('click', onOpenAddPopup);
 

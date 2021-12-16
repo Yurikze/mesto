@@ -30,7 +30,7 @@ export default class FormValidator {
 
   _handleFieldValidation(evt) {
     const { target } = evt;
-    const errorEl = document.querySelector(`.${target.id}-error`);
+    const errorEl = this._formElement.querySelector(`.${target.id}-error`);
     errorEl.textContent = target.validationMessage;
     target.classList.toggle(this._inputErrorClass, !target.validity.valid);
     errorEl.classList.toggle(this._errorClass, !target.validity.valid);
@@ -44,15 +44,9 @@ export default class FormValidator {
     );
   }
 
-  _hasInvalidInput = (inputList) => {
-    return inputList.some((inputElement) => {
-      return !inputElement.validity.valid;
-    });
-  };
-
   _hideInputError(inputElement) {
     inputElement.classList.remove(this._inputErrorClass)
-    const errorEl = document.querySelector(`.${inputElement.id}-error`);
+    const errorEl = this._formElement.querySelector(`.${inputElement.id}-error`);
     errorEl.textContent = ''
     errorEl.classList.remove(this._errorClass)
   }

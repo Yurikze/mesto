@@ -7,6 +7,7 @@ import PopupWithSubmit from '../components/PopupWithSubmit.js';
 import UserInfo from '../components/UserInfo.js';
 import Avatar from '../components/Avatar.js';
 import Api from '../components/Api.js';
+import {renderLoading} from '../utils/utils.js'
 import '../pages/index.css';
 
 const config = {
@@ -77,7 +78,7 @@ const placesSection = new Section({
   renderer: (placeItem) => {
     const place = returnNewPlace(placeItem);
     const placeElem = place.generateCard();
-    placesSection.apendItem(placeElem);
+    placesSection.appendItem(placeElem);
   },
   containerSelector: '.places__list',
 });
@@ -86,7 +87,8 @@ const placesSection = new Section({
 const avatarPopup = new PopupWithForm({
   popupSelector: '.popup-avatar',
   handleFormSubmit: (data) => {
-    avatarPopup.renderLoading(true);
+    renderLoading(avatarPopup, 'Сохранение...')
+    // avatarPopup.renderLoading(true);
     api
       .updateAvatar(data.avaUrl)
       .then((res) => {
@@ -95,7 +97,8 @@ const avatarPopup = new PopupWithForm({
       })
       .catch((err) => `Error setting avatar ${err}`)
       .finally(() => {
-        avatarPopup.renderLoading(false);
+        renderLoading(avatarPopup, 'Сохранить')
+        // avatarPopup.renderLoading(false);
       });
   },
 });
@@ -150,6 +153,7 @@ const addPopup = new PopupWithForm({
       .finally(() => {
         addPopup.renderLoading(false);
       });
+
   },
 });
 addPopup.setEventListeners()

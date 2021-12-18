@@ -10,7 +10,7 @@ export default class Section {
     });
   }
 
-  apendItem(elem) {
+  appendItem(elem) {
     this._container.append(elem);
   }
 
